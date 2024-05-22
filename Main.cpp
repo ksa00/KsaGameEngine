@@ -90,7 +90,6 @@ static int  WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, i
 
          Direct3D::EndDraw();
         
-
      }
 
  }
