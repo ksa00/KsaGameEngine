@@ -1,6 +1,5 @@
 #include <d3dcompiler.h>
 #include "Direct3D.h"
-
 //変数
 namespace Direct3D
 {
@@ -60,17 +59,16 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
 
 
 
-
     ///////////////////////////レンダーターゲットビュー作成///////////////////////////////
-    //スワップチェーンからバックバッファを取得（バックバッファ ＝ レンダーターゲット）
-    ID3D11Texture2D* pBackBuffer;
+      //スワップチェーンからバックバッファを取得（バックバッファ ＝ レンダーターゲット）
+    ID3D11Texture2D* pBackBuffer=nullptr;
     pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 
     //レンダーターゲットビューを作成
     pDevice->CreateRenderTargetView(pBackBuffer, NULL, &pRenderTargetView);
 
     //一時的にバックバッファを取得しただけなので解放
-    pBackBuffer->Release();
+    SAFE_RELEASE(pBackBuffer);
 
 
 
@@ -108,18 +106,18 @@ void Direct3D::InitShader()
     };
     pDevice->CreateInputLayout(layout, 1, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout);
 
-    pCompileVS->Release();
+    SAFE_RELEASE(pCompileVS);
 
     // ピクセルシェーダの作成（コンパイル）
     ID3DBlob* pCompilePS = nullptr;
     D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
     pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &pPixelShader);
-    pCompilePS->Release();
+    SAFE_RELEASE(pCompilePS);
  
     //ラスタライザ作成
-    D3D11_RASTERIZER_DESC rdc = {};
-    rdc.CullMode = D3D11_CULL_BACK;
-    rdc.FillMode = D3D11_FILL_SOLID;
+    D3D11_RASTERIZER_DESC rdc = {}; //多角形の裏側は描画しない（カリング
+    rdc.CullMode = D3D11_CULL_BACK; //多角形の内部を塗りつぶす
+    rdc.FillMode = D3D11_FILL_SOLID; // 反時計回りを表にするかどうか（がfalseなので時計回りが表）
     rdc.FrontCounterClockwise = FALSE;
     pDevice->CreateRasterizerState(&rdc, &pRasterizerState);
 
@@ -159,14 +157,18 @@ void Direct3D::EndDraw()
 //解放処理
 void Direct3D::Release()
 {
-    pRasterizerState->Release();
-    pVertexLayout->Release();
-  pPixelShader->Release();
-    pVertexShader->Release();
+    
+    SAFE_RELEASE(pRasterizerState);
+    SAFE_RELEASE(pVertexLayout);
+    SAFE_RELEASE(pPixelShader);
+    SAFE_RELEASE(pVertexShader);
+
+    SAFE_RELEASE(pRenderTargetView);
+    SAFE_RELEASE(pSwapChain);
+    SAFE_RELEASE(pContext);
+    SAFE_RELEASE(pDevice);
 
 
-    pRenderTargetView->Release();
-    pSwapChain->Release();
-    pContext->Release();
-    pDevice->Release();
+
+
 }

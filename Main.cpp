@@ -89,14 +89,16 @@ static int  WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, i
          //描画処理
 
          Direct3D::EndDraw();
-        
+         quad->Release();
+
      }
 
  }
  //解放処理
+ SAFE_DELETE(quad);
  Direct3D::Release();
- quad->Release();
- delete quad;
+
+ 
 	return 0;
 }
 //ウィンドウプロシージャ（何かあった時によばれる関数）
