@@ -12,7 +12,7 @@ const int WINDOW_HEIGHT = 600; //ウィンドウの高さ
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 //エントリーポイント
-static int  WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
+ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
 {
 //ウィンドウクラス（設計図）を作成
     
@@ -89,12 +89,13 @@ static int  WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, i
          //描画処理
 
          Direct3D::EndDraw();
-         quad->Release();
-
+        
      }
 
  }
  //解放処理
+ 
+
  SAFE_DELETE(quad);
  Direct3D::Release();
 
