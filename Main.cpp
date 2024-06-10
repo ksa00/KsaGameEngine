@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include "Direct3D.h"
 #include"Quad.h"
+#include"Camera.h"
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
 const LPCSTR APP_NAME = "サンプルゲーム";  //ウィンドウクラス名
@@ -56,11 +57,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 
  //Direct3D初期化
- Direct3D::Initialize(winW, winH, hWnd);
- Quad* quad = new Quad();
- quad->Initialize();
+ HRESULT hr= Direct3D::Initialize(winW, winH, hWnd);
+ if (FAILED(hr))
+ {
+     MessageBox(NULL, "DirectXの初期化に失敗", NULL, MB_OK);
+     return hr;
+ }
 
 
+ Camera::Initialize();
+
+ Quad* quad;
+ quad = new Quad();
+ hr = quad->Initialize();
+ if (FAILED(hr))
+ {
+     MessageBox(NULL, "Quadの初期化に失敗", NULL, MB_OK);
+     return hr;
+ }
 
  
 
@@ -80,13 +94,38 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
      //メッセージなし
      else
      {
+
+
+         //カメラを更新
+         Camera::Update();
+
          //ゲームの処理
-
-
          Direct3D::BeginDraw();
-         quad->Draw();
+       
 
          //描画処理
+         //1度ずつ回転するための変数
+         static float rot = 0;
+         rot += 0.01f;
+         //radian -> digree XMConvertToRadians
+         //digree -> radian XMConvertToDegrees
+
+         XMMATRIX rmat = XMMatrixRotationY(rot);
+
+         static float factor = 0.0;
+         factor += 0.001f;
+         ////float scale = 1.5 + sin(factor);
+         ////XMMATRIX smat = XMMatrixScaling(scale, scale, scale);
+         //////ここに自前の描画処理を追加していく
+         ////XMMATRIX tmat = XMMatrixTranslation(2.0*sin(factor), 0, 0);
+         XMMATRIX tmat = XMMatrixTranslation(3.0 * cos(factor), 3.0 * sin(factor), 0);
+         //XMMATRIX mat = smat * rmat * tmat;
+         //単位行列は、数字の１と同じ
+         XMMATRIX mat = XMMatrixIdentity();//Identityは単位行列って意味
+         mat = rmat * tmat;
+  quad->Draw(mat);
+
+
 
          Direct3D::EndDraw();
         

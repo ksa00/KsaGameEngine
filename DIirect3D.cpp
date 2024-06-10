@@ -1,5 +1,6 @@
 #include <d3dcompiler.h>
 #include "Direct3D.h"
+#include <DirectXMath.h>
 //変数
 namespace Direct3D
 {
@@ -16,8 +17,9 @@ namespace Direct3D
 }
 
 //初期化
-void Direct3D::Initialize(int winW, int winH, HWND hWnd)
+HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
 {
+    HRESULT hr;
     ///////////////////////////いろいろ準備するための設定///////////////////////////////
  //いろいろな設定項目をまとめた構造体
     DXGI_SWAP_CHAIN_DESC scDesc;
@@ -43,7 +45,7 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
     scDesc.SampleDesc.Quality = 0;		//　〃
     ////////////////上記設定をもとにデバイス、コンテキスト、スワップチェインを作成////////////////////////
     D3D_FEATURE_LEVEL level;
-    D3D11CreateDeviceAndSwapChain(
+   hr= D3D11CreateDeviceAndSwapChain(
         nullptr,				// どのビデオアダプタを使用するか？既定ならばnullptrで
         D3D_DRIVER_TYPE_HARDWARE,		// ドライバのタイプを渡す。ふつうはHARDWARE
         nullptr,				// 上記をD3D_DRIVER_TYPE_SOFTWAREに設定しないかぎりnullptr
@@ -57,16 +59,22 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
         &level,					// 無事完成したDevice、Contextのレベルが返ってくる
         &pContext);				// 無事完成したContextのアドレスが返ってくる
 
-
+   if (FAILED(hr)) {
+       MessageBox(NULL, "Device, Swapchain, DeviceContextの作成に失敗", NULL, MB_OK);
+       return hr;
+   }
 
     ///////////////////////////レンダーターゲットビュー作成///////////////////////////////
       //スワップチェーンからバックバッファを取得（バックバッファ ＝ レンダーターゲット）
-    ID3D11Texture2D* pBackBuffer=nullptr;
-    pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
-
+    ID3D11Texture2D* pBackBuffer;
+   pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
     //レンダーターゲットビューを作成
-    pDevice->CreateRenderTargetView(pBackBuffer, NULL, &pRenderTargetView);
-
+  hr= pDevice->CreateRenderTargetView(pBackBuffer, NULL, &pRenderTargetView);
+  if (FAILED(hr))
+  {
+      MessageBox(NULL, "レンダーターゲットビューの作成に失敗", NULL, MB_OK);
+      return hr;
+  }
     //一時的にバックバッファを取得しただけなので解放
     SAFE_RELEASE(pBackBuffer);
 
@@ -89,44 +97,69 @@ void Direct3D::Initialize(int winW, int winH, HWND hWnd)
     pContext->RSSetViewports(1, &vp);
    
     //シェーダー準備
-    InitShader();
+  hr=   InitShader();
+  if (FAILED(hr))
+  {
+      MessageBox(NULL, "シェーダの初期化に失敗", NULL, MB_OK);
+  }
+  return hr;
 }
 
 //シェーダー準備
-void Direct3D::InitShader()
+HRESULT Direct3D::InitShader()
 {
+    HRESULT hr;
     // 頂点シェーダの作成（コンパイル）
     ID3DBlob* pCompileVS = nullptr;
     D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
-    pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &pVertexShader);
-  
+    assert(pCompileVS != nullptr);
+   hr= pDevice->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &pVertexShader);
+   if (FAILED(hr))
+   {
+       MessageBox(NULL, "頂点シェーダの作成に失敗", NULL, MB_OK);
+       return hr;
+   }
     //頂点インプットレイアウト
     D3D11_INPUT_ELEMENT_DESC layout[] = {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
+  { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(DirectX::XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
     };
-    pDevice->CreateInputLayout(layout, 1, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout);
+   hr= pDevice->CreateInputLayout(layout, 2, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout);
 
     SAFE_RELEASE(pCompileVS);
-
+    if (FAILED(hr))
+    {
+        MessageBox(NULL, "頂点インプットレイアウトの作成に失敗", NULL, MB_OK);
+        return hr;
+    }
     // ピクセルシェーダの作成（コンパイル）
     ID3DBlob* pCompilePS = nullptr;
     D3DCompileFromFile(L"Simple3D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
-    pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &pPixelShader);
+    assert(pCompilePS != nullptr);
+   hr= pDevice->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &pPixelShader);
     SAFE_RELEASE(pCompilePS);
- 
+    if (FAILED(hr))
+    {
+        MessageBox(NULL, "ピクセルシェーダの作成に失敗", NULL, MB_OK);
+        return hr;
+    }
     //ラスタライザ作成
-    D3D11_RASTERIZER_DESC rdc = {}; //多角形の裏側は描画しない（カリング
-    rdc.CullMode = D3D11_CULL_BACK; //多角形の内部を塗りつぶす
-    rdc.FillMode = D3D11_FILL_SOLID; // 反時計回りを表にするかどうか（がfalseなので時計回りが表）
-    rdc.FrontCounterClockwise = FALSE;
-    pDevice->CreateRasterizerState(&rdc, &pRasterizerState);
-
+    D3D11_RASTERIZER_DESC rdc = {}; 
+    rdc.CullMode = D3D11_CULL_BACK; //多角形の裏側は描画しない（カリング
+    rdc.FillMode =D3D11_FILL_SOLID;//多角形の内部を塗りつぶす
+    rdc.FrontCounterClockwise = FALSE; // 反時計回りを表にするかどうか（がfalseなので時計回りが表）
+   hr= pDevice->CreateRasterizerState(&rdc, &pRasterizerState);
+   if (FAILED(hr))
+   {
+       MessageBox(NULL, "ラスタライザステートの作成に失敗", NULL, MB_OK);
+       return hr;
+   }
     //それぞれをデバイスコンテキストにセット
     pContext->VSSetShader(pVertexShader, NULL, 0);	//頂点シェーダー
     pContext->PSSetShader(pPixelShader, NULL, 0);	//ピクセルシェーダー
     pContext->IASetInputLayout(pVertexLayout);	//頂点インプットレイアウト
     pContext->RSSetState(pRasterizerState);		//ラスタライザー
-
+    return S_OK;
   
 
 }
