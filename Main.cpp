@@ -3,6 +3,8 @@
 #include "Direct3D.h"
 #include"Quad.h"
 #include"Camera.h"
+//リンカ
+#pragma comment(lib, "d3d11.lib")
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
 const LPCSTR APP_NAME = "サンプルゲーム";  //ウィンドウクラス名
@@ -118,12 +120,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
          ////XMMATRIX smat = XMMatrixScaling(scale, scale, scale);
          //////ここに自前の描画処理を追加していく
          ////XMMATRIX tmat = XMMatrixTranslation(2.0*sin(factor), 0, 0);
-         XMMATRIX tmat = XMMatrixTranslation(3.0 * cos(factor), 3.0 * sin(factor), 0);
+         XMMATRIX tmat = XMMatrixTranslation(3.0f* cos(factor), 3.0f * sin(factor), 0);
          //XMMATRIX mat = smat * rmat * tmat;
          //単位行列は、数字の１と同じ
          XMMATRIX mat = XMMatrixIdentity();//Identityは単位行列って意味
-         mat = rmat * tmat;
-  quad->Draw(mat);
+        mat = rmat * tmat;
+        quad->Draw(mat);
 
 
 

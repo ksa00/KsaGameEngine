@@ -122,7 +122,7 @@ HRESULT Direct3D::InitShader()
     //頂点インプットレイアウト
     D3D11_INPUT_ELEMENT_DESC layout[] = {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },	//位置
-  { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(DirectX::XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(DirectX::XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
     };
    hr= pDevice->CreateInputLayout(layout, 2, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout);
 
@@ -145,7 +145,7 @@ HRESULT Direct3D::InitShader()
     }
     //ラスタライザ作成
     D3D11_RASTERIZER_DESC rdc = {}; 
-    rdc.CullMode = D3D11_CULL_BACK; //多角形の裏側は描画しない（カリング
+    rdc.CullMode = D3D11_CULL_NONE; //多角形の裏側は描画しない（カリング
     rdc.FillMode =D3D11_FILL_SOLID;//多角形の内部を塗りつぶす
     rdc.FrontCounterClockwise = FALSE; // 反時計回りを表にするかどうか（がfalseなので時計回りが表）
    hr= pDevice->CreateRasterizerState(&rdc, &pRasterizerState);
@@ -168,7 +168,7 @@ HRESULT Direct3D::InitShader()
 void Direct3D::BeginDraw()
 {
     //背景の色
-    float clearColor[4] = { 0.0f, 0.5f, 0.5f, 1.0f };//R,G,B,A
+    float clearColor[4] = { 255 / 255.0f, 250 / 255.0f, 205 / 255.0f, 1.0f };//R,G,B,A
 
     //画面をクリア
     pContext->ClearRenderTargetView(pRenderTargetView, clearColor);

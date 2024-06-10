@@ -1,13 +1,12 @@
 #pragma once
-#include <wincodec.h>
 #include <d3d11.h>
 #include <string>
 // DirectXTex‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚ðƒŠƒ“ƒN
-#pragma comment(lib, "DirectXTex.lib")
+
 #include <DirectXTex.h>
 
-//#include <wrl.h>
-//using namespace Microsoft::WRL;
+#include <wrl.h>
+using namespace Microsoft::WRL;
 using std::string;
 
 

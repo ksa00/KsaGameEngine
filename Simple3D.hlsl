@@ -35,6 +35,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD)
 	//ローカル座標に、ワールド・ビュー・プロジェクション行列をかけて
 	//スクリーン座標に変換し、ピクセルシェーダーへ
     outData.pos = mul(pos, matWVP);
+    //outData.pos = pos;
     outData.uv = uv;
 	//まとめて出力
     return outData;
@@ -47,4 +48,5 @@ float4 PS(VS_OUT inData) : SV_Target
 {
    //return float4(65 / 255.0, 105 / 255.0, 225 / 255.0, 1); //ピクセルを塗る色
     return g_texture.Sample(g_sampler, inData.uv);
+
 }
