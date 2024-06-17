@@ -9,6 +9,7 @@ using namespace DirectX;
 struct CONSTANT_BUFFER
 {
 	XMMATRIX	matWVP;
+	XMMATRIX	matW;
 };
 //XMFLOAT3Ç≈Ç‡ÇÊÇ¢ÅB
 //í∏ì_èÓïÒ
@@ -16,6 +17,8 @@ struct VERTEX
 {
 	XMVECTOR position;
 	XMVECTOR uv;
+	XMVECTOR normal;
+
 };
 class Quad
 {

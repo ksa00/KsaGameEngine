@@ -108,13 +108,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
          //•`‰æˆ—
          //1“x‚¸‚Â‰ñ“]‚·‚é‚½‚ß‚Ì•Ï”
          static float rot = 0;
-         rot += 0.01f;
+         rot += 0.001f;
          //radian -> digree XMConvertToRadians
          //digree -> radian XMConvertToDegrees
 
          XMMATRIX rmat = XMMatrixRotationY(rot);
 
-         static float factor = 0.0;
+         static float factor = 0.0f;
          factor += 0.001f;
          ////float scale = 1.5 + sin(factor);
          ////XMMATRIX smat = XMMatrixScaling(scale, scale, scale);
@@ -124,7 +124,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
          //XMMATRIX mat = smat * rmat * tmat;
          //’PˆÊs—ñ‚ÍA”Žš‚Ì‚P‚Æ“¯‚¶
          XMMATRIX mat = XMMatrixIdentity();//Identity‚Í’PˆÊs—ñ‚Á‚ÄˆÓ–¡
-        mat = rmat * tmat;
+      mat = rmat * tmat;
         quad->Draw(mat);
 
 
