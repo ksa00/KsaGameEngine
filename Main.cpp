@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include "Direct3D.h"
 #include"Quad.h"
+#include"Dice.h"
+
 #include"Camera.h"
 //リンカ
 #pragma comment(lib, "d3d11.lib")
@@ -69,9 +71,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
  Camera::Initialize();
 
- Quad* quad;
- quad = new Quad();
- hr = quad->Initialize();
+// Quad* quad;
+ Dice* dice;
+ //quad = new Quad();
+ dice = new Dice();
+
+// hr = quad->Initialize();
+ hr = dice->Initialize();
+
  if (FAILED(hr))
  {
      MessageBox(NULL, "Quadの初期化に失敗", NULL, MB_OK);
@@ -125,7 +132,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
          //単位行列は、数字の１と同じ
          XMMATRIX mat = XMMatrixIdentity();//Identityは単位行列って意味
       mat = rmat * tmat;
-        quad->Draw(mat);
+     //   quad->Draw(mat);
+        dice->Draw(mat);
 
 
 
@@ -137,7 +145,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
  //解放処理
  
 
- SAFE_DELETE(quad);
+// SAFE_DELETE(quad);
+ SAFE_DELETE(dice);
+
  Direct3D::Release();
 
  

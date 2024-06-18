@@ -13,6 +13,7 @@ SamplerState g_sampler : register(s0); //サンプラー
 cbuffer global
 {
     float4x4 matWVP; // ワールド・ビュー・プロジェクションの合成行列
+    float4x4 matNormal; //法線変形用の行列
     float4x4 matW; //ワールド行列
 };
 
@@ -40,7 +41,7 @@ VS_OUT VS(float4 pos : POSITION, float4 uv : TEXCOORD, float4 normal : NORMAL)
     //outData.pos = pos;
     outData.uv = uv;
     //法線を回転
-  //  normal = ●●●●●●●●●;
+    normal = mul(normal, matNormal);
     float4 light = float4(-1, 0.5, -0.7, 0);
     light = normalize(light);
     outData.color = clamp(dot(normal, light), 0, 1);

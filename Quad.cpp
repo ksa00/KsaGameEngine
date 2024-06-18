@@ -18,10 +18,10 @@ HRESULT Quad::Initialize()
 	// 頂点情報
 	VERTEX vertices[] = 
 	{
-	{ XMVectorSet(-1.0f, 1.0f, -1.0f, 0.0f), XMVectorSet(0.0f,  0.0f, 0.0f, 0.0f), XMVectorSet(0,0,0, 0.0f) },   // 四角形の頂点（左上）
-	{ XMVectorSet(1.0f,  1.0f, -1.0f, 0.0f), XMVectorSet(0.25f, 0.0f, 0.0f, 0.0f), XMVectorSet(0,0,0, 0.0f) },   // 四角形の頂点（右上）
-	{ XMVectorSet(1.0f, -1.0f, -1.0f, 0.0f), XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f), XMVectorSet(0,0,0, 0.0f) },   // 四角形の頂点（右下）
-	{ XMVectorSet(-1.0f,-1.0f, -1.0f, 0.0f), XMVectorSet(0.0f,  0.5f, 0.0f, 0.0f), XMVectorSet(0,0,0, 0.0f) },   // 四角形の頂点（左下）
+		{ XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f) },   // 四角形の頂点（左上）
+		{ XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),	XMVectorSet(0.25f, 0.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f) },   // 四角形の頂点（右上）
+		{ XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),	XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f), XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f) },   // 四角形の頂点（右下）
+		{ XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f), XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f) },   // 四角形の頂点（左下）
 	};
 
 	// 頂点データ用バッファの設定
@@ -42,24 +42,8 @@ HRESULT Quad::Initialize()
 		return E_FAIL;
 	}
 	//インデックス情報
-//	int index[] = { 0,2,3, 0,1,2 };
-	int index[]={ // Front face
-    0, 1, 2, 0, 2, 3,
-
-    // Back face
-    4, 5, 6, 4, 6, 7,
-
-    // Left face
-    8, 9, 10, 8, 10, 11,
-
-    // Right face
-    12, 13, 14, 12, 14, 15,
-
-    // Top face
-    16, 17, 18, 16, 18, 19,
-
-    // Bottom face
-    20, 21, 22, 20, 22, 23};
+int index[] = { 0,2,3, 0,1,2 };
+	
 	// インデックスバッファを生成する
 	D3D11_BUFFER_DESC   bd;
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -127,7 +111,7 @@ void Quad::Draw()
 	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//頂点シェーダー用	
 	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ピクセルシェーダー用
 
-	Direct3D::pContext->DrawIndexed(36, 0, 0);
+	Direct3D::pContext->DrawIndexed(6, 0, 0);
 }
 
 void Quad::Draw(XMMATRIX& worldMatrix)
@@ -136,8 +120,8 @@ void Quad::Draw(XMMATRIX& worldMatrix)
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	CONSTANT_BUFFER cb;
 	cb.matWVP = XMMatrixTranspose(worldMatrix * Camera::GetViewMatrix() * Camera::GetProjectionMatrix());
-	//cb.matW = ●●●●●●●●●●●●●●●;
-	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
+cb.matW = XMMatrixTranspose(worldMatrix);
+Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
 	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// データを値を送る
 	Direct3D::pContext->Unmap(pConstantBuffer_, 0);	//再開
 
@@ -162,7 +146,7 @@ void Quad::Draw(XMMATRIX& worldMatrix)
 	ID3D11ShaderResourceView* pSRV = pTexture_->GetSRV();
 	Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
 
-	Direct3D::pContext->DrawIndexed(36, 0, 0);
+	Direct3D::pContext->DrawIndexed(6, 0, 0);
 
 
 }

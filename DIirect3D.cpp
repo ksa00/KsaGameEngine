@@ -68,8 +68,10 @@ HRESULT Direct3D::Initialize(int winW, int winH, HWND hWnd)
       //スワップチェーンからバックバッファを取得（バックバッファ ＝ レンダーターゲット）
     ID3D11Texture2D* pBackBuffer;
    pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+
     //レンダーターゲットビューを作成
   hr= pDevice->CreateRenderTargetView(pBackBuffer, NULL, &pRenderTargetView);
+
   if (FAILED(hr))
   {
       MessageBox(NULL, "レンダーターゲットビューの作成に失敗", NULL, MB_OK);
@@ -125,7 +127,7 @@ HRESULT Direct3D::InitShader()
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(DirectX::XMVECTOR) , D3D11_INPUT_PER_VERTEX_DATA, 0 },//UV座標
    { "NORMAL",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, sizeof(DirectX::XMVECTOR) * 2 ,	D3D11_INPUT_PER_VERTEX_DATA, 0 },//法線
     };
-   hr= pDevice->CreateInputLayout(layout, 2, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout);
+   hr= pDevice->CreateInputLayout(layout, 3, pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), &pVertexLayout);
 
     SAFE_RELEASE(pCompileVS);
     if (FAILED(hr))
