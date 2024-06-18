@@ -41,8 +41,8 @@ HRESULT Dice::Initialize()
 		{ XMVectorSet(1.0f,  1.0f, 1.0f, 0.0f),	XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)  },   // 四角形の頂点（右上）
 		{ XMVectorSet(1.0f,  1.0f, -1.0f, 0.0f),	XMVectorSet(1.0f, 0.5f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)  },   // 四角形の頂点（右下）
 		{ XMVectorSet(-1.0f,  1.0f, -1.0f, 0.0f),XMVectorSet(0.75f, 0.5f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)  },   // 四角形の頂点（左下）
-		//back
-		{ XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f),XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f), XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f) },   // 四角形の頂点（左上）
+		//bottom
+		{ XMVectorSet(-1.0f, -1.0f, 1.0f, 0.0f),XMVectorSet(0.0f, 0.5f, 0.0f, 0.0f), XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f) },   // 四角形の頂点（左上）
 		{ XMVectorSet(1.0f, -1.0f, 1.0f, 0.0f),	XMVectorSet(0.25f, 0.5f, 0.0f, 0.0f),XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f) },   // 四角形の頂点（右上）
 		{ XMVectorSet(1.0f, -1.0f, -1.0f, 0.0f),	XMVectorSet(0.25f, 1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f) },   // 四角形の頂点（右下）
 		{ XMVectorSet(-1.0f, -1.0f, -1.0f, 0.0f),XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),XMVectorSet(0.0f, -1.0f, 0.0f, 0.0f) },   // 四角形の頂点（左下）
@@ -67,14 +67,14 @@ HRESULT Dice::Initialize()
 	}
 	//インデックス情報
 	int index[] = {
-		0,2,3, 
+	    0,2,3, 
 		0,1,2,
 		4,6,7,
 		4,5,6,
 		8,10,11,
 		8,9,10,
 		12,14,15,
-		12,13,14,
+	    12,13,14,
 		16,18,19,
 		16,17,18,
 		20,22,23,
@@ -161,4 +161,9 @@ void Dice::Draw(XMMATRIX& worldMatrix)
 
 void Dice::Release()
 {
+	SAFE_RELEASE(pTexture_);
+	SAFE_DELETE(pTexture_);
+	SAFE_RELEASE(pConstantBuffer_);
+	SAFE_RELEASE(pIndexBuffer_);
+	SAFE_RELEASE(pVertexBuffer_);
 }
