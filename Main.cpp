@@ -114,7 +114,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
          //•`‰æˆ—
          //1“x‚¸‚Â‰ñ“]‚·‚é‚½‚ß‚Ì•Ï”
-         static float rot = 0;
+         static float rot =0;
          rot += 0.001f;
          //radian -> digree XMConvertToRadians
          //digree -> radian XMConvertToDegrees
