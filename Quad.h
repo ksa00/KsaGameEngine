@@ -2,7 +2,7 @@
 #include "Direct3D.h"
 #include "Texture.h"
 #include <DirectXMath.h>
-
+#include"Transform.h"
 using namespace DirectX;
 //コンスタントバッファー
 
@@ -22,6 +22,10 @@ struct VERTEX
 };
 class Quad
 {protected:
+	int vertexNum_;
+	std::vector<VERTEX>vertices_;
+	int indexNum_;
+	std::vector<int>index_;
 	ID3D11Buffer* pVertexBuffer_;	//頂点バッファ
 	ID3D11Buffer* pIndexBuffer_;   //インデクスバッファ
 	ID3D11Buffer* pConstantBuffer_;	//コンスタントバッファ
@@ -30,7 +34,24 @@ public:
 	Quad();
 virtual ~Quad();
 	HRESULT Initialize();
-	void Draw();
-	virtual void Draw(XMMATRIX& worldMatrix);
+
+	 void Draw(Transform& transform);
 	void Release();
+//private:
+	//---------Initializeから呼ばれる関数---------
+	virtual void InitVertexData();		//頂点情報の準備
+	HRESULT CreateVertexBuffer();		//頂点バッファを作成
+
+	virtual void InitIndexData();		//インデックス情報を準備
+	HRESULT CreateIndexBuffer();		//インデックスバッファを作成
+
+	HRESULT CreateConstantBuffer();		//コンスタントバッファ作成
+
+	HRESULT LoadTexture();				//テクスチャをロード
+
+
+	//---------Draw関数から呼ばれる関数---------
+	void PassDataToCB(DirectX::XMMATRIX worldMatrix);	//コンスタントバッファに各種情報を渡す
+	void SetBufferToPipeline();
+
 };

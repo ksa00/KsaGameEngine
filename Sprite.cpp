@@ -55,15 +55,17 @@ void Sprite::Draw(Transform& transform)
 {
 	Direct3D::SetShader(SHADER_2D);
 
+
+	transform.Calculation();//トランスフォームを計算
 	//コンスタントバッファに情報を渡す
-	transform.Calclation();
+	
 	PassDataToCB(transform.GetWorldMatrix());
 
 	//頂点バッファ、インデックスバッファ、コンスタントバッファをパイプラインにセット
 	SetBufferToPipeline();
 
 	//描画
-	Direct3D::pContext->DrawIndexed(indexNum, 0, 0);
+	Direct3D::pContext->DrawIndexed(indexNum_, 0, 0);
 }
 
 //解放
@@ -82,12 +84,12 @@ void Sprite::Release()
 void Sprite::InitVertexData()
 {
 	// 頂点情報
-	vertices_ =
+	vertices_=
 	{
-		XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f),// 四角形の頂点（左上）
-		XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),  XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f),	// 四角形の頂点（右上）
-		XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),  XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f),// 四角形の頂点（右下）
-		XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f),	// 四角形の頂点（左下）		
+{	XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f)},// 四角形の頂点（左上）,
+{	XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),  XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f)},	// 四角形の頂点（右上）
+{	XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),  XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f)},// 四角形の頂点（右下）
+{	XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)},	// 四角形の頂点（左下）		
 	};
 
 	//頂点の数
@@ -112,7 +114,7 @@ HRESULT Sprite::CreateVertexBuffer()
 	hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "頂点バッファの作成に失敗しました", L"エラー", MB_OK);
+		MessageBox(NULL, "頂点バッファの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
 	return S_OK;
@@ -121,14 +123,12 @@ HRESULT Sprite::CreateVertexBuffer()
 //インデックス情報を準備
 void Sprite::InitIndexData()
 {
-	int index[] = { 0,2,3, 0,1,2 };
+indices_ = { 0,2,3, 0,1,2 };
 
 	//インデックス数
-	indexNum = sizeof(index) / sizeof(int);
+	indexNum_ = indices_.size();
 
-	//メンバ変数へコピー
-	index_ = new int[indexNum];
-	memcpy(index_, index, sizeof(index));
+	
 }
 
 //インデックスバッファを作成
@@ -136,13 +136,13 @@ HRESULT Sprite::CreateIndexBuffer()
 {
 	D3D11_BUFFER_DESC   bd;
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(int) * indexNum;
+	bd.ByteWidth = sizeof(int) * indexNum_;
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
 
 	D3D11_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = index_;
+	InitData.pSysMem = indices_.data();
 	InitData.SysMemPitch = 0;
 	InitData.SysMemSlicePitch = 0;
 
@@ -150,7 +150,7 @@ HRESULT Sprite::CreateIndexBuffer()
 	hr = Direct3D::pDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer_);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, L"インデックスバッファの作成に失敗しました", L"エラー", MB_OK);
+		MessageBox(NULL, "インデックスバッファの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
 	return S_OK;
@@ -172,7 +172,7 @@ HRESULT Sprite::CreateConstantBuffer()
 	hr = Direct3D::pDevice->CreateBuffer(&cb, nullptr, &pConstantBuffer_);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, L"コンスタントバッファの作成に失敗しました", L"エラー", MB_OK);
+		MessageBox(NULL, "コンスタントバッファの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
 	return S_OK;
@@ -184,10 +184,10 @@ HRESULT Sprite::LoadTexture()
 	pTexture_ = new Texture;
 
 	HRESULT hr;
-	hr = pTexture_->Load(L"Assets\\Dice.png");
+	hr = pTexture_->Load("Asset\\shi.png");
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, L"テクスチャの作成に失敗しました", L"エラー", MB_OK);
+		MessageBox(NULL, "テクスチャの作成に失敗しました", "エラー", MB_OK);
 		return hr;
 	}
 	return S_OK;

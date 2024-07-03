@@ -3,7 +3,7 @@
 #include "Direct3D.h"
 #include"Quad.h"
 #include"Dice.h"
-
+#include"Sprite.h"
 #include"Camera.h"
 //リンカ
 #pragma comment(lib, "d3d11.lib")
@@ -71,20 +71,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
  Camera::Initialize();
 
-// Quad* quad;
- Dice* dice;
- //quad = new Quad();
- dice = new Dice();
-
-// hr = quad->Initialize();
+ Dice* dice = new Dice;
  hr = dice->Initialize();
+ if (FAILED(hr))
+ {
+     MessageBox(NULL, "Diceの初期化に失敗", NULL, MB_OK);
+     return hr;
+ }
+ Sprite* sprite = new Sprite;
+ hr = sprite->Initialize();
 
  if (FAILED(hr))
  {
-     MessageBox(NULL, "Quadの初期化に失敗", NULL, MB_OK);
+     MessageBox(NULL, "Spriteの初期化に失敗", NULL, MB_OK);
      return hr;
  }
-
  
 
  //メッセージループ（何か起きるのを待つ）
@@ -110,30 +111,20 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
          //ゲームの処理
          Direct3D::BeginDraw();
-       
+       /*  XMMATRIX mat = XMMatrixIdentity();
+         mat = XMMatrixScaling(1 / 2.0f, 1 / 2.0f, 1.0f);*/
+         Transform trans;
+         Transform spr;
+         spr.scale_ = {0.35f,0.35f,1.0f};
+         spr.position_.x = 0.62f;
+         static float rot = 0;
 
-         //描画処理
-         //1度ずつ回転するための変数
-         static float rot =0;
-         rot += 0.001f;
-         //radian -> digree XMConvertToRadians
-         //digree -> radian XMConvertToDegrees
+         trans.rotate_.y = rot;
+         rot += 0.1;
+         dice->Draw(trans);
+         sprite->Draw(spr);
+    
 
-         XMMATRIX rmat = XMMatrixRotationY(rot);
-
-         static float factor = 0.0f;
-         factor += 0.001f;
-         ////float scale = 1.5 + sin(factor);
-         ////XMMATRIX smat = XMMatrixScaling(scale, scale, scale);
-         //////ここに自前の描画処理を追加していく
-         ////XMMATRIX tmat = XMMatrixTranslation(2.0*sin(factor), 0, 0);
-         XMMATRIX tmat = XMMatrixTranslation(3.0f* cos(factor), 3.0f * sin(factor), 0);
-         //XMMATRIX mat = smat * rmat * tmat;
-         //単位行列は、数字の１と同じ
-         XMMATRIX mat = XMMatrixIdentity();//Identityは単位行列って意味
-      mat = rmat * tmat;
-     //   quad->Draw(mat);
-        dice->Draw(mat);
 
 
 
@@ -146,7 +137,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
  
 
 // SAFE_DELETE(quad);
+// SAFE_DELETE(dice);
  SAFE_DELETE(dice);
+ SAFE_DELETE(sprite);
 
  Direct3D::Release();
 
