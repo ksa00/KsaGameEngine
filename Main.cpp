@@ -78,15 +78,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
      MessageBox(NULL, "Diceの初期化に失敗", NULL, MB_OK);
      return hr;
  }
- Sprite* sprite = new Sprite;
- hr = sprite->Initialize();
 
- if (FAILED(hr))
- {
-     MessageBox(NULL, "Spriteの初期化に失敗", NULL, MB_OK);
-     return hr;
- }
- 
 
  //メッセージループ（何か起きるのを待つ）
  MSG msg;
@@ -114,15 +106,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
        /*  XMMATRIX mat = XMMatrixIdentity();
          mat = XMMatrixScaling(1 / 2.0f, 1 / 2.0f, 1.0f);*/
          Transform trans;
-         Transform spr;
-         spr.scale_ = {0.35f,0.35f,1.0f};
-         spr.position_.x = 0.62f;
+        
          static float rot = 0;
-
+         trans.scale_ = { 0.5,0.5,0.5 };
+         trans.position_ = { 2.0,2.0,0 };
          trans.rotate_.y = rot;
          rot += 0.1;
          dice->Draw(trans);
-         sprite->Draw(spr);
+        
     
 
 
@@ -139,7 +130,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 // SAFE_DELETE(quad);
 // SAFE_DELETE(dice);
  SAFE_DELETE(dice);
- SAFE_DELETE(sprite);
 
  Direct3D::Release();
 

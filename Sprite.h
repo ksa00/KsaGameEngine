@@ -66,7 +66,7 @@ private:
 
 
 	//---------Draw関数から呼ばれる関数---------
-	void PassDataToCB(DirectX::XMMATRIX worldMatrix);	//コンスタントバッファに各種情報を渡す
+	void PassDataToCB(Transform& transform);	//コンスタントバッファに各種情報を渡す
 	void SetBufferToPipeline();
 
 };

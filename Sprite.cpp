@@ -59,7 +59,7 @@ void Sprite::Draw(Transform& transform)
 	transform.Calculation();//トランスフォームを計算
 	//コンスタントバッファに情報を渡す
 	
-	PassDataToCB(transform.GetWorldMatrix());
+	PassDataToCB(transform);
 
 	//頂点バッファ、インデックスバッファ、コンスタントバッファをパイプラインにセット
 	SetBufferToPipeline();
@@ -194,10 +194,10 @@ HRESULT Sprite::LoadTexture()
 }
 
 //コンスタントバッファに各種情報を渡す
-void Sprite::PassDataToCB(DirectX::XMMATRIX worldMatrix)
+void Sprite::PassDataToCB(Transform& transform)
 {
 	CONSTANT_BUFFER cb;
-	cb.matW = XMMatrixTranspose(worldMatrix);
+	cb.matW = XMMatrixTranspose(transform.GetNormalMatrix());
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
 	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUからのデータアクセスを止める
