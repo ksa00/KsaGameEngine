@@ -10,6 +10,7 @@ struct CONSTANT_BUFFER
 {
 	XMMATRIX	matWVP;
 	XMMATRIX	matW;
+
 };
 //XMFLOAT3Ç≈Ç‡ÇÊÇ¢ÅB
 //í∏ì_èÓïÒ

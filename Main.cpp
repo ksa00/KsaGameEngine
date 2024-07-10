@@ -5,6 +5,7 @@
 #include"Dice.h"
 #include"Sprite.h"
 #include"Camera.h"
+#include"Fbx.h"
 //ƒŠƒ“ƒJ
 #pragma comment(lib, "d3d11.lib")
 //’è”éŒ¾
@@ -70,7 +71,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 
  Camera::Initialize();
-
+ Fbx* fbx = new Fbx;
+ fbx->Load("Asset/oden.fbx");
  Dice* dice = new Dice;
  hr = dice->Initialize();
  if (FAILED(hr))
@@ -106,13 +108,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
        /*  XMMATRIX mat = XMMatrixIdentity();
          mat = XMMatrixScaling(1 / 2.0f, 1 / 2.0f, 1.0f);*/
          Transform trans;
-        
+         Transform t;
+       
          static float rot = 0;
-         trans.scale_ = { 0.5,0.5,0.5 };
-         trans.position_ = { 2.0,2.0,0 };
+       //  trans.scale_ = { 0.5,0.5,0.5 };
+         trans.position_ = { 3.0,1.0,0 };
          trans.rotate_.y = rot;
          rot += 0.1;
          dice->Draw(trans);
+         t.position_.y = -2.0;
+         t.scale_ = { 3.0,3.0,3.0 };
+         t.rotate_.y = rot;
+         fbx->Draw(t);
         
     
 
