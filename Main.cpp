@@ -109,16 +109,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
          mat = XMMatrixScaling(1 / 2.0f, 1 / 2.0f, 1.0f);*/
          Transform trans;
          Transform t;
-       
-         static float rot = 0;
-       //  trans.scale_ = { 0.5,0.5,0.5 };
-         trans.position_ = { 3.0,1.0,0 };
-         trans.rotate_.y = rot;
-         rot += 0.1;
+         
+         static  float rotX = 0.0f;
+         static float rotY = 0.0f;
+         static  float rotSpeed = 0.125f;
+
+         // Inside your update/render loop
+         trans.position_ = { 3.0f, 1.0f, 0.0f };
+         rotX += rotSpeed;
+         rotY += rotSpeed;
+         trans.rotate_.x = rotX;
+         trans.rotate_.y = rotY;
+
+      
          dice->Draw(trans);
          t.position_.y = -2.0;
          t.scale_ = { 3.0,3.0,3.0 };
-         t.rotate_.y = rot;
+      //   t.rotate_.x = rotX;
+        t.rotate_.y = rotY;
          fbx->Draw(t);
         
     
