@@ -71,16 +71,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 
  Camera::Initialize();
- Fbx* fbx = new Fbx;
- fbx->Load("Asset/oden.fbx");
- Dice* dice = new Dice;
- hr = dice->Initialize();
- if (FAILED(hr))
- {
-     MessageBox(NULL, "Diceの初期化に失敗", NULL, MB_OK);
-     return hr;
- }
-
 
  //メッセージループ（何か起きるのを待つ）
  MSG msg;
@@ -98,42 +88,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
      //メッセージなし
      else
      {
-
-
          //カメラを更新
          Camera::Update();
 
          //ゲームの処理
          Direct3D::BeginDraw();
-       /*  XMMATRIX mat = XMMatrixIdentity();
-         mat = XMMatrixScaling(1 / 2.0f, 1 / 2.0f, 1.0f);*/
-         Transform trans;
-         Transform t;
-         
-         static  float rotX = 0.0f;
-         static float rotY = 0.0f;
-         static  float rotSpeed = 0.125f;
-
-         // Inside your update/render loop
-         trans.position_ = { 3.0f, 1.0f, 0.0f };
-         rotX += rotSpeed;
-         rotY += rotSpeed;
-         trans.rotate_.x = rotX;
-         trans.rotate_.y = rotY;
-
-      
-         dice->Draw(trans);
-         t.position_.y = -2.0;
-         t.scale_ = { 3.0,3.0,3.0 };
-      //   t.rotate_.x = rotX;
-        t.rotate_.y = rotY;
-         fbx->Draw(t);
-        
-    
-
-
-
-
+        //描画終了処理
          Direct3D::EndDraw();
         
      }
@@ -141,11 +101,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
  }
  //解放処理
  
-
-// SAFE_DELETE(quad);
-// SAFE_DELETE(dice);
- SAFE_DELETE(dice);
-
  Direct3D::Release();
 
  
