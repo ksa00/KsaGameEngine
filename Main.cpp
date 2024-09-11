@@ -1,21 +1,28 @@
 //インクルード
 #include <Windows.h>
-#include "Direct3D.h"
-#include"Quad.h"
-#include"Dice.h"
-#include"Sprite.h"
-#include"Camera.h"
-#include"Fbx.h"
+#include <stdlib.h>
+#include "Engine/Direct3D.h"
+#include"Engine/Quad.h"
+#include"Engine/Dice.h"
+#include"Engine/Sprite.h"
+#include"Engine/Camera.h"
+#include"Engine/Fbx.h"
+#include "Engine/Input.h"
+#include "Engine/RootJob.h"
 //リンカ
-#pragma comment(lib, "d3d11.lib")
+//#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "winmm.lib")
 //定数宣言
 const char* WIN_CLASS_NAME = "SampleGame";  //ウィンドウクラス名
 const LPCSTR APP_NAME = "サンプルゲーム";  //ウィンドウクラス名
 const int WINDOW_WIDTH = 800;  //ウィンドウの幅
 const int WINDOW_HEIGHT = 600; //ウィンドウの高さ
 
+RootJob* pRootJob = nullptr;
+
 //プロトタイプ宣言
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+//BOOL CALLBACK DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp);
 
 //エントリーポイント
  int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
@@ -72,6 +79,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
  Camera::Initialize();
 
+ //DirectInputの初期化
+ Input::Initialize(hWnd);
+
+ pRootJob = new RootJob(nullptr);
+ pRootJob->Initialize();
+
  //メッセージループ（何か起きるのを待つ）
  MSG msg;
  ZeroMemory(&msg, sizeof(msg));
@@ -88,12 +101,50 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
      //メッセージなし
      else
      {
+         timeBeginPeriod(1);
+
+         static DWORD countFps = 0;
+         static DWORD startTime = timeGetTime();
+         DWORD nowTime = timeGetTime();
+         static DWORD lastUpdateTime = nowTime;
+
+         if (nowTime - startTime >= 1000)
+         {
+             char str[16];
+             wsprintf(str, "%u", countFps);
+             SetWindowText(hWnd, str);
+
+             countFps = 0;
+             startTime = nowTime;
+         }
+
+         if ((nowTime - lastUpdateTime) * 60 <= 1000)
+         {
+             continue;
+         }
+         lastUpdateTime = nowTime;
+
+
+         countFps++;
+
+
+
+
+         timeEndPeriod(1);
+
          //カメラを更新
          Camera::Update();
 
-         //ゲームの処理
+         //入力の処理
+         Input::Update();
+         pRootJob->UpdateSub();
+
+         //▼描画
          Direct3D::BeginDraw();
-        //描画終了処理
+
+         //ルートジョブから、すべてのオブジェクトのドローを呼ぶ
+        pRootJob->DrawSub();
+         Fbx* fbx;
          Direct3D::EndDraw();
         
      }
@@ -101,7 +152,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
  }
  //解放処理
  
+ pRootJob->ReleaseSub();
+ SAFE_DELETE(pRootJob);
+
+ Input::Release();
  Direct3D::Release();
+
 
  
 	return 0;
@@ -111,6 +167,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     switch (msg)
     {
+    case WM_MOUSEMOVE:
+        Input::SetMousePosition(LOWORD(lParam), HIWORD(lParam));
+        return 0;
     case WM_DESTROY:
         PostQuitMessage(0);  //プログラム終了
         return 0;
