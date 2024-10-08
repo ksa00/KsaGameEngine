@@ -4,7 +4,7 @@
 class Player :
     public GameObject
 {
-    Fbx* pOden;
+    Fbx* pFbx;
 public:
     Player(GameObject* parent);
     ~Player();
