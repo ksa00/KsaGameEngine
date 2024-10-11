@@ -5,6 +5,7 @@ class Player :
     public GameObject
 {
     Fbx* pFbx;
+    int hModel_;//ƒ‚ƒfƒ‹”Ô†
 public:
     Player(GameObject* parent);
     ~Player();

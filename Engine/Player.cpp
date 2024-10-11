@@ -1,7 +1,9 @@
 #include "Player.h"
 #include"Childoden.h"
+#include"Input.h"
+#include"Model.h"
 Player::Player(GameObject* parent)
-	:GameObject(parent,"Player"),pFbx(nullptr)
+	:GameObject(parent,"Player"),pFbx(nullptr),hModel_(-1)
 {
 }
 
@@ -11,31 +13,37 @@ Player::~Player()
 
 void Player::Initialize()
 {
-	pFbx = new Fbx;
-	pFbx->Load("Asset//oden.fbx");
+hModel_	=Model::Load("Asset//oden.fbx");
+	transform_.position_ = { 0,-5,0 };
+	transform_.scale_ = { 2,2,2 };
 	
-	this->transform_.position_ = { 0,-3,0 };
-	
-	Instantiate<Childoden>(this);
-	transform_.scale_ = { 3,3,3 };
 }
 
 void Player::Update()
 {
-	transform_.rotate_.y += 1.0f;
-	if (transform_.rotate_.y > 60 * 10) {
-		KillMe();
+	//transform_.rotate_.y += 1.0f;
+	if (Input::IsKey(DIK_A)) {
+		transform_.position_.x -= 0.1f;
+	}
+	if (Input::IsKey(DIK_D)) {
+		transform_.position_.x += 0.1f;
+	}
+	if (Input::IsKey(DIK_SPACE)) {
+		
+		GameObject *coden=Instantiate<Childoden>(this);
+		coden->SetPosition(transform_.position_);
+		
 	}
 }
 
 void Player::Draw()
 {
-	pFbx->Draw(transform_);
+	Model::SetTransform(hModel_, transform_);
+	Model::Draw(hModel_);
 
 }
 
 void Player::Release()
 {
-	pFbx->Release();
-
+  
 }
