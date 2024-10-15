@@ -2,11 +2,11 @@
 #include "GameObject.h"
 
 
-class PlayScene :
+class TestScene :
     public GameObject
 {
 public:
-    PlayScene(GameObject* parent);
+    TestScene(GameObject* parent);
     void Initialize() override;
     void Update() override;
     void Draw() override;

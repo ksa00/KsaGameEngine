@@ -3,7 +3,7 @@
 #include"Input.h"
 #include"Model.h"
 Player::Player(GameObject* parent)
-	:GameObject(parent,"Player"),pFbx(nullptr),hModel_(-1)
+	:GameObject(parent,"Player"),hModel_(-1)
 {
 }
 
@@ -45,5 +45,5 @@ void Player::Draw()
 
 void Player::Release()
 {
-  
+	
 }

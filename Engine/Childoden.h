@@ -1,11 +1,11 @@
 #pragma once
 #include "GameObject.h"
-#include"Fbx.h"
+
 
 class Childoden :
     public GameObject
 {
-    Fbx* pFbx;
+   
     int hModel_;
 public:
     //コンストラクタ
