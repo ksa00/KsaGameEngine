@@ -2,7 +2,7 @@
 //必要なインクルードを書く
 #include <string>
 #include <vector>
-#include "fbx.h"
+#include "Fbx.h"
 
 namespace Model
 {
@@ -17,6 +17,6 @@ namespace Model
 	void SetTransform(int hModel, Transform transform);
 	void Draw(int hModel);
 	void Release();
-	//void RayCast(int hModel, RayCastData& rayData);
+	void RayCast(int hModel, RayCastData& rayData);
 
 }

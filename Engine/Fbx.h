@@ -13,6 +13,13 @@
 #pragma comment(lib, "zlib-MD.lib")
 
 using std::vector;
+struct RayCastData
+{
+	XMFLOAT4 start;
+	XMFLOAT4 dir;
+	bool hit;
+	float dist;
+};
 class Fbx
 {
 	//ƒ}ƒeƒŠƒAƒ‹
@@ -44,6 +51,7 @@ class Fbx
 	ID3D11Buffer** pIndexBuffer_;
 	ID3D11Buffer* pConstantBuffer_;
 	MATERIAL* pMaterialList_;
+	VERTEX* pVertices_;
 	int** ppIndex_;
 	vector <int> indexCount_;
 	
@@ -57,4 +65,5 @@ public:
 	void InitMaterial(fbxsdk::FbxNode* pNode);
     void    Draw(Transform& transform);
 	void    Release();
+	void RayCast(RayCastData& rayData);
 };

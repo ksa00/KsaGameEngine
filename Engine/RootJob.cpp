@@ -1,5 +1,5 @@
 #include "RootJob.h"
-#include"TestScene.h"
+#include"SceneManager.h"
 
 
 RootJob::RootJob(GameObject* parent)
@@ -17,7 +17,7 @@ void RootJob::Initialize()
 	pPlayScene = new PlayScene(this);
 	pPlayScene->Initialize();
 	childList_.push_back(pPlayScene);*/
-	Instantiate<TestScene>(this);
+	Instantiate<SceneManager>(this);
 }
 
 void RootJob::Update()
