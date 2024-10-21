@@ -4,7 +4,7 @@
 #include <string>
 #include "Transform.h"
 #include "Direct3D.h"
-
+#include "SphereCollider.h"
 using std::string;
 using std::list;
 
@@ -18,7 +18,7 @@ protected:
 	Transform			transform_;
 	GameObject*			pParent_;
 	string				objectName_; //オブジェクトの名前の文字列
-
+	SphereCollider* pCollider_;
 
 public:
 	GameObject();
@@ -38,6 +38,10 @@ public:
 	GameObject* FindChildObject(string _objName);
 	GameObject* GetRootJob();
 	GameObject* FindObject(string _objName);
+	void AddCollider(SphereCollider* pCollider);
+	void Collision(GameObject* pTarget);
+	void RoundRobin(GameObject* pTarget);
+
 
 
 public:
