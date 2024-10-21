@@ -5,6 +5,7 @@
 class TestScene :
     public GameObject
 {
+    int hTitle;
 public:
     TestScene(GameObject* parent);
     void Initialize() override;
