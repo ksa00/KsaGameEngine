@@ -117,6 +117,11 @@ GameObject* GameObject::FindObject(string _objName)
 	return(result);
 }
 
+void GameObject::AddCollider(SphereCollider* pCollider)
+{
+	pCollider_ = pCollider;
+}
+
 void GameObject::Collision(GameObject* pTarget)
 {
 	if (pTarget == this || pTarget->pCollider_ == nullptr)

@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 #include "Direct3D.h"
 #include "Texture.h"
 #include "Transform.h"
-
+#include<vector>
 
 using std::vector;
 
@@ -10,19 +10,19 @@ using std::vector;
 
 
 
-//lŠpŒ`ƒ|ƒŠƒSƒ“iOŠpŒ`‚ğ‚Q–‡j‚ğ•`‰æ‚·‚éƒNƒ‰ƒX
+//Å½lÅ pÅ’`Æ’|Æ’Å Æ’SÆ’â€œÂiÅ½OÅ pÅ’`â€šÃ°â€šQâ€“â€¡Âjâ€šÃ°â€¢`â€°Ã¦â€šÂ·â€šÃ©Æ’NÆ’â€°Æ’X
 class Sprite
 {
-	//ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@[
+	//Æ’RÆ’â€œÆ’XÆ’^Æ’â€œÆ’gÆ’oÆ’bÆ’tÆ’@Â[
 	struct CONSTANT_BUFFER
 	{
-		XMMATRIX	matW;		//ƒ[ƒ‹ƒhs—ñ
+		XMMATRIX	matW;		//Æ’ÂÂ[Æ’â€¹Æ’hÂsâ€”Ã±
 	};
 
-	//’¸“_î•ñ
+	//â€™Â¸â€œ_ÂÃ®â€¢Ã±
 	struct VERTEX
 	{
-		XMVECTOR position;	//ˆÊ’u
+		XMVECTOR position;	//Ë†ÃŠâ€™u
 		XMVECTOR uv;		//UV
 	};
 protected:
@@ -30,43 +30,43 @@ protected:
 	vector<VERTEX>vertices_;
 	uint64_t indexNum_;
 	vector<int>indices_;
-	ID3D11Buffer* pIndexBuffer_;		//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@
+	ID3D11Buffer* pIndexBuffer_;		//Æ’CÆ’â€œÆ’fÆ’bÆ’NÆ’XÆ’oÆ’bÆ’tÆ’@
 	ID3D11Buffer* pVertexBuffer_;
-	ID3D11Buffer* pConstantBuffer_;	//ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@
+	ID3D11Buffer* pConstantBuffer_;	//Æ’RÆ’â€œÆ’XÆ’^Æ’â€œÆ’gÆ’oÆ’bÆ’tÆ’@
 
-	Texture* pTexture_;		//ƒeƒNƒXƒ`ƒƒ
+	Texture* pTexture_;		//Æ’eÆ’NÆ’XÆ’`Æ’Æ’
 
 
 public:
 	Sprite();
 	~Sprite();
 
-	//‰Šú‰»iƒ|ƒŠƒSƒ“‚ğ•\¦‚·‚é‚½‚ß‚ÌŠeíî•ñ‚ğ€”õj
-	//–ß’lF¬Œ÷^¸”s
-	HRESULT Initialize();
+	//Ââ€°Å Ãºâ€°Â»ÂiÆ’|Æ’Å Æ’SÆ’â€œâ€šÃ°â€¢\Å½Â¦â€šÂ·â€šÃ©â€šÂ½â€šÃŸâ€šÃŒÅ eÅ½Ã­ÂÃ®â€¢Ã±â€šÃ°Ââ‚¬â€ÃµÂj
+	//â€“ÃŸâ€™lÂFÂÂ¬Å’Ã·Â^Å½Â¸â€s
 
-	//•`‰æ
-	//ˆø”Ftransform	ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€ƒIƒuƒWƒFƒNƒg
+	HRESULT Load(std::string fileName);//åˆæœŸåŒ–ç”¨ï¼ˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§ã§ããªã„å¥´ã¯ã“ã£ã¡ã§åˆæœŸåŒ–ï¼‰
+	//â€¢`â€°Ã¦
+	//Ë†Ã¸Ââ€ÂFtransform	Æ’gÆ’â€°Æ’â€œÆ’XÆ’tÆ’HÂ[Æ’â‚¬Æ’IÆ’uÆ’WÆ’FÆ’NÆ’g
 	void Draw(Transform& transform);
 
-	//‰ğ•ú
+	//â€°Ã°â€¢Ãº
 	void Release();
 
 private:
-	//---------Initialize‚©‚çŒÄ‚Î‚ê‚éŠÖ”---------
-	virtual void InitVertexData();		//’¸“_î•ñ‚Ì€”õ
-	HRESULT CreateVertexBuffer();		//’¸“_ƒoƒbƒtƒ@‚ğì¬
+	//---------Initializeâ€šÂ©â€šÃ§Å’Ã„â€šÃâ€šÃªâ€šÃ©Å Ã–Ââ€---------
+	virtual void InitVertexData();		//â€™Â¸â€œ_ÂÃ®â€¢Ã±â€šÃŒÂâ‚¬â€Ãµ
+	HRESULT CreateVertexBuffer();		//â€™Â¸â€œ_Æ’oÆ’bÆ’tÆ’@â€šÃ°ÂÃ¬ÂÂ¬
 
-	virtual void InitIndexData();		//ƒCƒ“ƒfƒbƒNƒXî•ñ‚ğ€”õ
-	HRESULT CreateIndexBuffer();		//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğì¬
+	virtual void InitIndexData();		//Æ’CÆ’â€œÆ’fÆ’bÆ’NÆ’XÂÃ®â€¢Ã±â€šÃ°Ââ‚¬â€Ãµ
+	HRESULT CreateIndexBuffer();		//Æ’CÆ’â€œÆ’fÆ’bÆ’NÆ’XÆ’oÆ’bÆ’tÆ’@â€šÃ°ÂÃ¬ÂÂ¬
 
-	HRESULT CreateConstantBuffer();		//ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@ì¬
+	HRESULT CreateConstantBuffer();		//Æ’RÆ’â€œÆ’XÆ’^Æ’â€œÆ’gÆ’oÆ’bÆ’tÆ’@ÂÃ¬ÂÂ¬
 
-	HRESULT LoadTexture();				//ƒeƒNƒXƒ`ƒƒ‚ğƒ[ƒh
+	HRESULT LoadTexture(std::string fileName);			//ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ãƒ­ãƒ¼ãƒ‰
 
 
-	//---------DrawŠÖ”‚©‚çŒÄ‚Î‚ê‚éŠÖ”---------
-	void PassDataToCB(Transform& transform);	//ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@‚ÉŠeíî•ñ‚ğ“n‚·
+	//---------DrawÅ Ã–Ââ€â€šÂ©â€šÃ§Å’Ã„â€šÃâ€šÃªâ€šÃ©Å Ã–Ââ€---------
+	void PassDataToCB(Transform& transform);	//Æ’RÆ’â€œÆ’XÆ’^Æ’â€œÆ’gÆ’oÆ’bÆ’tÆ’@â€šÃ‰Å eÅ½Ã­ÂÃ®â€¢Ã±â€šÃ°â€œnâ€šÂ·
 	void SetBufferToPipeline();
 
 };

@@ -1,11 +1,11 @@
 #pragma once
 #include "GameObject.h"
-
+#include"Sprite.h"
 
 class TestScene :
     public GameObject
 {
-    int hTitle;
+    Sprite Title_spr;
 public:
     TestScene(GameObject* parent);
     void Initialize() override;

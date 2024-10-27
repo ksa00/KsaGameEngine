@@ -1,8 +1,8 @@
 #include "Sprite.h"
 #include "Camera.h"
-
-
-//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+#include<filesystem>
+#include"assert.h"
+//Æ’RÆ’â€œÆ’XÆ’gÆ’â€°Æ’NÆ’^
 Sprite::Sprite() :
 	vertexNum_(0), vertices_(0), pVertexBuffer_(nullptr),
 	indexNum_(0), indices_(0), pIndexBuffer_(nullptr),
@@ -11,37 +11,37 @@ Sprite::Sprite() :
 {
 }
 
-//ƒfƒXƒgƒ‰ƒNƒ^
+//Æ’fÆ’XÆ’gÆ’â€°Æ’NÆ’^
 Sprite::~Sprite()
 {
 	Release();
 }
 
-//‰Šú‰»
-HRESULT Sprite::Initialize()
+
+
+HRESULT Sprite::Load(std::string fileName)
 {
-	//’¸“_î•ñ
-	InitVertexData();					//ƒf[ƒ^‚ğ—pˆÓ‚µ‚Ä
-	if (FAILED(CreateVertexBuffer()))	//’¸“_ƒoƒbƒtƒ@ì¬
+	//é ‚ç‚¹æƒ…å ±
+	InitVertexData();//ãƒ‡ãƒ¼ã‚¿ã‚’ç”¨æ„ã—ã¦
+	if (FAILED(CreateVertexBuffer()))//é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ä½œæˆ
+	{
+		return E_FAIL;
+	}
+	//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æƒ…å ±
+	InitIndexData();					//ãƒ‡ãƒ¼ã‚¿ã‚’ç”¨æ„ã—ã¦
+	if (FAILED(CreateIndexBuffer()))	//ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡ä½œæˆ
 	{
 		return E_FAIL;
 	}
 
-	//ƒCƒ“ƒfƒbƒNƒXî•ñ
-	InitIndexData();					//ƒf[ƒ^‚ğ—pˆÓ‚µ‚Ä
-	if (FAILED(CreateIndexBuffer()))	//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@ì¬
+	//ã‚³ãƒ³ã‚¹ã‚¿ãƒ³ãƒˆãƒãƒƒãƒ•ã‚¡ä½œæˆ
+	if (FAILED(CreateConstantBuffer()))//ã‚³ãƒ³ã‚¹ã‚¿ãƒ³ãƒˆãƒãƒƒãƒ•ã‚¡ä½œæˆ
 	{
 		return E_FAIL;
 	}
 
-	//ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@ì¬
-	if (FAILED(CreateConstantBuffer()))
-	{
-		return E_FAIL;
-	}
-
-	//ƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒh
-	if (FAILED(LoadTexture()))
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ­ãƒ¼ãƒ‰
+	if (FAILED(LoadTexture(fileName)))
 	{
 		return E_FAIL;
 	}
@@ -49,26 +49,25 @@ HRESULT Sprite::Initialize()
 	return S_OK;
 }
 
-
-//•`‰æ
+//â€¢`â€°Ã¦
 void Sprite::Draw(Transform& transform)
 {
 	Direct3D::SetShader(SHADER_2D);
 
 
-	transform.Calculation();//ƒgƒ‰ƒ“ƒXƒtƒH[ƒ€‚ğŒvZ
-	//ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@‚Éî•ñ‚ğ“n‚·
+	transform.Calculation();//Æ’gÆ’â€°Æ’â€œÆ’XÆ’tÆ’HÂ[Æ’â‚¬â€šÃ°Å’vÅ½Z
+	//Æ’RÆ’â€œÆ’XÆ’^Æ’â€œÆ’gÆ’oÆ’bÆ’tÆ’@â€šÃ‰ÂÃ®â€¢Ã±â€šÃ°â€œnâ€šÂ·
 	
 	PassDataToCB(transform);
 
-	//’¸“_ƒoƒbƒtƒ@AƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@AƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@‚ğƒpƒCƒvƒ‰ƒCƒ“‚ÉƒZƒbƒg
+	//â€™Â¸â€œ_Æ’oÆ’bÆ’tÆ’@ÂAÆ’CÆ’â€œÆ’fÆ’bÆ’NÆ’XÆ’oÆ’bÆ’tÆ’@ÂAÆ’RÆ’â€œÆ’XÆ’^Æ’â€œÆ’gÆ’oÆ’bÆ’tÆ’@â€šÃ°Æ’pÆ’CÆ’vÆ’â€°Æ’CÆ’â€œâ€šÃ‰Æ’ZÆ’bÆ’g
 	SetBufferToPipeline();
 
-	//•`‰æ
+	//â€¢`â€°Ã¦
 	Direct3D::pContext->DrawIndexed(indexNum_, 0, 0);
 }
 
-//‰ğ•ú
+//â€°Ã°â€¢Ãº
 void Sprite::Release()
 {
 	
@@ -78,27 +77,27 @@ void Sprite::Release()
 	SAFE_RELEASE(pVertexBuffer_);
 }
 
-///////////////‚±‚±‚©‚ç‚ÍprivateŠÖ”///////////////
+///////////////â€šÂ±â€šÂ±â€šÂ©â€šÃ§â€šÃprivateÅ Ã–Ââ€///////////////
 
-//’¸“_î•ñ‚Ì€”õ
+//â€™Â¸â€œ_ÂÃ®â€¢Ã±â€šÃŒÂâ‚¬â€Ãµ
 void Sprite::InitVertexData()
 {
-	// ’¸“_î•ñ
+	// â€™Â¸â€œ_ÂÃ®â€¢Ã±
 	vertices_=
 	{
-{	XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f)},// lŠpŒ`‚Ì’¸“_i¶ãj,
-{	XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),  XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f)},	// lŠpŒ`‚Ì’¸“_i‰Eãj
-{	XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),  XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f)},// lŠpŒ`‚Ì’¸“_i‰E‰ºj
-{	XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)},	// lŠpŒ`‚Ì’¸“_i¶‰ºj		
+{	XMVectorSet(-1.0f,  1.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f)},// Å½lÅ pÅ’`â€šÃŒâ€™Â¸â€œ_ÂiÂÂ¶ÂÃ£Âj,
+{	XMVectorSet(1.0f,  1.0f, 0.0f, 0.0f),  XMVectorSet(1.0f, 0.0f, 0.0f, 0.0f)},	// Å½lÅ pÅ’`â€šÃŒâ€™Â¸â€œ_Âiâ€°EÂÃ£Âj
+{	XMVectorSet(1.0f, -1.0f, 0.0f, 0.0f),  XMVectorSet(1.0f, 1.0f, 0.0f, 0.0f)},// Å½lÅ pÅ’`â€šÃŒâ€™Â¸â€œ_Âiâ€°Eâ€°ÂºÂj
+{	XMVectorSet(-1.0f, -1.0f, 0.0f, 0.0f), XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)},	// Å½lÅ pÅ’`â€šÃŒâ€™Â¸â€œ_ÂiÂÂ¶â€°ÂºÂj		
 	};
 
-	//’¸“_‚Ì”
-	vertexNum_ = vertices_.size();	//‘Sƒf[ƒ^‚ÌƒTƒCƒY@€@1’¸“_•ª‚ÌƒTƒCƒY@@’¸“_”
+	//â€™Â¸â€œ_â€šÃŒÂâ€
+	vertexNum_ = vertices_.size();	//â€˜SÆ’fÂ[Æ’^â€šÃŒÆ’TÆ’CÆ’YÂ@Ââ‚¬Â@1â€™Â¸â€œ_â€¢Âªâ€šÃŒÆ’TÆ’CÆ’YÂ@ÂÂÂ@â€™Â¸â€œ_Ââ€
 
 	
 }
 
-//’¸“_ƒoƒbƒtƒ@‚ğì¬
+//â€™Â¸â€œ_Æ’oÆ’bÆ’tÆ’@â€šÃ°ÂÃ¬ÂÂ¬
 HRESULT Sprite::CreateVertexBuffer()
 {
 	HRESULT hr;
@@ -114,24 +113,24 @@ HRESULT Sprite::CreateVertexBuffer()
 	hr = Direct3D::pDevice->CreateBuffer(&bd_vertex, &data_vertex, &pVertexBuffer_);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "’¸“_ƒoƒbƒtƒ@‚Ìì¬‚É¸”s‚µ‚Ü‚µ‚½", "ƒGƒ‰[", MB_OK);
+		MessageBox(NULL, "â€™Â¸â€œ_Æ’oÆ’bÆ’tÆ’@â€šÃŒÂÃ¬ÂÂ¬â€šÃ‰Å½Â¸â€sâ€šÂµâ€šÃœâ€šÂµâ€šÂ½", "Æ’GÆ’â€°Â[", MB_OK);
 		return hr;
 	}
 	return S_OK;
 }
 
-//ƒCƒ“ƒfƒbƒNƒXî•ñ‚ğ€”õ
+//Æ’CÆ’â€œÆ’fÆ’bÆ’NÆ’XÂÃ®â€¢Ã±â€šÃ°Ââ‚¬â€Ãµ
 void Sprite::InitIndexData()
 {
 indices_ = { 0,2,3, 0,1,2 };
 
-	//ƒCƒ“ƒfƒbƒNƒX”
+	//Æ’CÆ’â€œÆ’fÆ’bÆ’NÆ’XÂâ€
 	indexNum_ = indices_.size();
 
 	
 }
 
-//ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚ğì¬
+//Æ’CÆ’â€œÆ’fÆ’bÆ’NÆ’XÆ’oÆ’bÆ’tÆ’@â€šÃ°ÂÃ¬ÂÂ¬
 HRESULT Sprite::CreateIndexBuffer()
 {
 	D3D11_BUFFER_DESC   bd;
@@ -150,13 +149,13 @@ HRESULT Sprite::CreateIndexBuffer()
 	hr = Direct3D::pDevice->CreateBuffer(&bd, &InitData, &pIndexBuffer_);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@‚Ìì¬‚É¸”s‚µ‚Ü‚µ‚½", "ƒGƒ‰[", MB_OK);
+		MessageBox(NULL, "Æ’CÆ’â€œÆ’fÆ’bÆ’NÆ’XÆ’oÆ’bÆ’tÆ’@â€šÃŒÂÃ¬ÂÂ¬â€šÃ‰Å½Â¸â€sâ€šÂµâ€šÃœâ€šÂµâ€šÂ½", "Æ’GÆ’â€°Â[", MB_OK);
 		return hr;
 	}
 	return S_OK;
 }
 
-//ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@ì¬
+//Æ’RÆ’â€œÆ’XÆ’^Æ’â€œÆ’gÆ’oÆ’bÆ’tÆ’@ÂÃ¬ÂÂ¬
 HRESULT Sprite::CreateConstantBuffer()
 {
 	D3D11_BUFFER_DESC cb;
@@ -167,41 +166,46 @@ HRESULT Sprite::CreateConstantBuffer()
 	cb.MiscFlags = 0;
 	cb.StructureByteStride = 0;
 
-	// ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@‚Ìì¬
+	// Æ’RÆ’â€œÆ’XÆ’^Æ’â€œÆ’gÆ’oÆ’bÆ’tÆ’@â€šÃŒÂÃ¬ÂÂ¬
 	HRESULT hr;
 	hr = Direct3D::pDevice->CreateBuffer(&cb, nullptr, &pConstantBuffer_);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@‚Ìì¬‚É¸”s‚µ‚Ü‚µ‚½", "ƒGƒ‰[", MB_OK);
+		MessageBox(NULL, "Æ’RÆ’â€œÆ’XÆ’^Æ’â€œÆ’gÆ’oÆ’bÆ’tÆ’@â€šÃŒÂÃ¬ÂÂ¬â€šÃ‰Å½Â¸â€sâ€šÂµâ€šÃœâ€šÂµâ€šÂ½", "Æ’GÆ’â€°Â[", MB_OK);
 		return hr;
 	}
 	return S_OK;
 }
 
-//ƒeƒNƒXƒ`ƒƒ‚ğƒ[ƒh
-HRESULT Sprite::LoadTexture()
+HRESULT Sprite::LoadTexture(std::string fileName)
 {
+	namespace fs = std::filesystem;
+
 	pTexture_ = new Texture;
+	assert(fs::is_regular_file(fileName));
+
 
 	HRESULT hr;
-	hr = pTexture_->Load("Asset\\shi.png");
+	hr = pTexture_->Load(fileName);
 	if (FAILED(hr))
 	{
-		MessageBox(NULL, "ƒeƒNƒXƒ`ƒƒ‚Ìì¬‚É¸”s‚µ‚Ü‚µ‚½", "ƒGƒ‰[", MB_OK);
+		MessageBox(NULL, "ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ä½œæˆã«å¤±æ•—ã—ã¾ã—ãŸ", "ã‚¨ãƒ©ãƒ¼", MB_OK);
 		return hr;
 	}
 	return S_OK;
 }
 
-//ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@‚ÉŠeíî•ñ‚ğ“n‚·
+
+
+//Æ’RÆ’â€œÆ’XÆ’^Æ’â€œÆ’gÆ’oÆ’bÆ’tÆ’@â€šÃ‰Å eÅ½Ã­ÂÃ®â€¢Ã±â€šÃ°â€œnâ€šÂ·
 void Sprite::PassDataToCB(Transform& transform)
 {
 	CONSTANT_BUFFER cb;
 	cb.matW = XMMatrixTranspose(transform.GetNormalMatrix());
 
 	D3D11_MAPPED_SUBRESOURCE pdata;
-	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPU‚©‚ç‚Ìƒf[ƒ^ƒAƒNƒZƒX‚ğ~‚ß‚é
-	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// ƒf[ƒ^‚ğ’l‚ğ‘—‚é
+	Direct3D::pContext->Map(pConstantBuffer_, 0, D3D11_MAP_WRITE_DISCARD, 0, &pdata);	// GPUâ€šÂ©â€šÃ§â€šÃŒÆ’fÂ[Æ’^Æ’AÆ’NÆ’ZÆ’Xâ€šÃ°Å½~â€šÃŸâ€šÃ©
+	memcpy_s(pdata.pData, pdata.RowPitch, (void*)(&cb), sizeof(cb));	// Æ’fÂ[Æ’^â€šÃ°â€™lâ€šÃ°â€˜â€”â€šÃ©
 
 	ID3D11SamplerState* pSampler = pTexture_->GetSampler();
 	Direct3D::pContext->PSSetSamplers(0, 1, &pSampler);
@@ -209,23 +213,23 @@ void Sprite::PassDataToCB(Transform& transform)
 	ID3D11ShaderResourceView* pSRV = pTexture_->GetSRV();
 	Direct3D::pContext->PSSetShaderResources(0, 1, &pSRV);
 
-	Direct3D::pContext->Unmap(pConstantBuffer_, 0);	//ÄŠJ
+	Direct3D::pContext->Unmap(pConstantBuffer_, 0);	//ÂÃ„Å J
 }
 
-//Šeƒoƒbƒtƒ@‚ğƒpƒCƒvƒ‰ƒCƒ“‚ÉƒZƒbƒg
+//Å eÆ’oÆ’bÆ’tÆ’@â€šÃ°Æ’pÆ’CÆ’vÆ’â€°Æ’CÆ’â€œâ€šÃ‰Æ’ZÆ’bÆ’g
 void Sprite::SetBufferToPipeline()
 {
-	//’¸“_ƒoƒbƒtƒ@
+	//â€™Â¸â€œ_Æ’oÆ’bÆ’tÆ’@
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
 	Direct3D::pContext->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
 
-	// ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@[‚ğƒZƒbƒg
+	// Æ’CÆ’â€œÆ’fÆ’bÆ’NÆ’XÆ’oÆ’bÆ’tÆ’@Â[â€šÃ°Æ’ZÆ’bÆ’g
 	stride = sizeof(int);
 	offset = 0;
 	Direct3D::pContext->IASetIndexBuffer(pIndexBuffer_, DXGI_FORMAT_R32_UINT, 0);
 
-	//ƒRƒ“ƒXƒ^ƒ“ƒgƒoƒbƒtƒ@
-	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//’¸“_ƒVƒF[ƒ_[—p	
-	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//ƒsƒNƒZƒ‹ƒVƒF[ƒ_[—p
+	//Æ’RÆ’â€œÆ’XÆ’^Æ’â€œÆ’gÆ’oÆ’bÆ’tÆ’@
+	Direct3D::pContext->VSSetConstantBuffers(0, 1, &pConstantBuffer_);	//â€™Â¸â€œ_Æ’VÆ’FÂ[Æ’_Â[â€”p	
+	Direct3D::pContext->PSSetConstantBuffers(0, 1, &pConstantBuffer_);	//Æ’sÆ’NÆ’ZÆ’â€¹Æ’VÆ’FÂ[Æ’_Â[â€”p
 }
