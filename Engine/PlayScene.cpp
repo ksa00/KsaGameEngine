@@ -1,5 +1,7 @@
 #include "PlayScene.h"
 #include"Player.h"
+#include"Enemy.h"
+
 PlayScene::PlayScene(GameObject* parent)
 {
 }
@@ -11,6 +13,7 @@ void PlayScene::Initialize()
 	pPlayer->Initialize();
 	childList_.push_back(pPlayer);*/
 	Instantiate<Player>(this);
+	Instantiate<Enemy>(this);
 }
 
 void PlayScene::Update()
