@@ -158,17 +158,19 @@
   <ItemGroup>
     <ClCompile Include="Engine\Camera.cpp" />
     <ClCompile Include="Engine\Childoden.cpp" />
+    <ClCompile Include="Engine\Collider.cpp" />
     <ClCompile Include="Engine\Dice.cpp" />
-    <ClCompile Include="Engine\DIirect3D.cpp" />
+    <ClCompile Include="Engine\Direct3D.cpp" />
     <ClCompile Include="Engine\Enemy.cpp" />
     <ClCompile Include="Engine\Fbx.cpp" />
     <ClCompile Include="Engine\GameObject.cpp" />
+    <ClCompile Include="Engine\GameOver.cpp" />
     <ClCompile Include="Engine\Input.cpp" />
     <ClCompile Include="Engine\Model.cpp" />
     <ClCompile Include="Engine\Player.cpp" />
     <ClCompile Include="Engine\PlayScene.cpp" />
     <ClCompile Include="Engine\Quad.cpp" />
-    <ClCompile Include="Engine\RootJob.cpp" />
+    <ClCompile Include="Engine\RootObject.cpp" />
     <ClCompile Include="Engine\SceneManager.cpp" />
     <ClCompile Include="Engine\SphereCollider.cpp" />
     <ClCompile Include="Engine\Sprite.cpp" />
@@ -216,17 +218,19 @@
   <ItemGroup>
     <ClInclude Include="Engine\Camera.h" />
     <ClInclude Include="Engine\Childoden.h" />
+    <ClInclude Include="Engine\Collider.h" />
     <ClInclude Include="Engine\Dice.h" />
     <ClInclude Include="Engine\Direct3D.h" />
     <ClInclude Include="Engine\Enemy.h" />
     <ClInclude Include="Engine\Fbx.h" />
     <ClInclude Include="Engine\GameObject.h" />
+    <ClInclude Include="Engine\GameOver.h" />
     <ClInclude Include="Engine\Input.h" />
     <ClInclude Include="Engine\Model.h" />
     <ClInclude Include="Engine\Player.h" />
     <ClInclude Include="Engine\PlayScene.h" />
     <ClInclude Include="Engine\Quad.h" />
-    <ClInclude Include="Engine\RootJob.h" />
+    <ClInclude Include="Engine\RootObject.h" />
     <ClInclude Include="Engine\SceneManager.h" />
     <ClInclude Include="Engine\SphereCollider.h" />
     <ClInclude Include="Engine\Sprite.h" />

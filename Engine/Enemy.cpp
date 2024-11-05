@@ -11,10 +11,11 @@ void Enemy::Initialize()
 {
 	hModel = Model::Load("Asset/enemy.fbx");
 
-	transform_.position_.y = 2.0f;
-	transform_.scale_ = { 0.1f,0.1f,0.1f };
-	SphereCollider* col = new SphereCollider(0.1f);
-	this->AddCollider(col);
+	//transform_.position_.y = 2.0f;
+transform_.scale_ = { 0.1f,0.1f,0.1f };
+	SphereCollider* col = new SphereCollider(XMFLOAT3(0, 0, 0), 0.5f);
+	AddCollider(col);
+	
 }
 
 void Enemy::Update()
@@ -30,6 +31,7 @@ void Enemy::Draw()
 {
 	Model::SetTransform(hModel, transform_);
 	Model::Draw(hModel);
+	
 }
 
 void Enemy::Release()

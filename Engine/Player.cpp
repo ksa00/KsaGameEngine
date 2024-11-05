@@ -30,7 +30,7 @@ void Player::Update()
 	}
 	if (Input::IsKey(DIK_SPACE)) {
 		
-		GameObject *coden=Instantiate<Childoden>(this);
+		GameObject* coden=Instantiate<Childoden>(this);
 		coden->SetPosition(transform_.position_);
 		
 	}

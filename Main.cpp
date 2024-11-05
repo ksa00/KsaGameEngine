@@ -8,7 +8,7 @@
 #include"Engine/Camera.h"
 #include"Engine/Fbx.h"
 #include "Engine/Input.h"
-#include "Engine/RootJob.h"
+#include "Engine/RootObject.h"
 //リンカ
 //#pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "winmm.lib")
@@ -18,7 +18,7 @@ const LPCSTR APP_NAME = "サンプルゲーム";  //ウィンドウクラス名
 const int WINDOW_WIDTH = 800;  //ウィンドウの幅
 const int WINDOW_HEIGHT = 600; //ウィンドウの高さ
 
-RootJob* pRootJob = nullptr;
+RootObject* pRootJob = nullptr;
 
 //プロトタイプ宣言
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -82,7 +82,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
  //DirectInputの初期化
  Input::Initialize(hWnd);
 
- pRootJob = new RootJob(nullptr);
+ pRootJob = new RootObject;
  pRootJob->Initialize();
 
  //メッセージループ（何か起きるのを待つ）
