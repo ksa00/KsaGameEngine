@@ -15,7 +15,7 @@ void Player::Initialize()
 {
 hModel_	=Model::Load("Asset//oden.fbx");
 	transform_.position_ = { 0,-5,0 };
-	transform_.scale_ = { 2,2,2 };
+	transform_.scale_ = { 0.5,0.5,0.5 };
 	
 }
 
@@ -28,7 +28,7 @@ void Player::Update()
 	if (Input::IsKey(DIK_D)) {
 		transform_.position_.x += 0.1f;
 	}
-	if (Input::IsKey(DIK_SPACE)) {
+	if (Input::IsKeyDown(DIK_SPACE)) {
 		
 		GameObject* coden=Instantiate<Childoden>(this);
 		coden->SetPosition(transform_.position_);

@@ -7,6 +7,7 @@
 #include"Engine/Sprite.h"
 #include"Engine/Camera.h"
 #include"Engine/Fbx.h"
+#include"Engine/Model.h"
 #include "Engine/Input.h"
 #include "Engine/RootObject.h"
 //ƒŠƒ“ƒJ

@@ -22,26 +22,22 @@ void SceneManager::Initialize()
 
 void SceneManager::Update()
 {
-	//シーンを実際に切り替える
-	//現在のシーンと、ネクストシーンが別だったら切り替え
+	//次のシーンが現在のシーンと違う　＝　シーンを切り替えなければならない
 	if (currentSceneID_ != nextSceneID_)
 	{
 		//そのシーンのオブジェクトを全削除
-		auto scene = childList_.begin();
-		(*scene)->ReleaseSub();
-		SAFE_DELETE(*scene);
-		childList_.clear();
-		//ロードしたデータを全削除
-		Model::Release();
-		//後片付け終了
+		KillAllChildren();
 
+	
+
+		//次のシーンを作成
 		switch (nextSceneID_)
 		{
 		case SCENE_ID_TEST: Instantiate<TestScene>(this); break;
 		case SCENE_ID_PLAY: Instantiate<PlayScene>(this); break;
 		case SCENE_ID_GAMEOVER: Instantiate<GameOver>(this); break;
-		
-	}
+		}
+	
 		currentSceneID_ = nextSceneID_;
 	}
 

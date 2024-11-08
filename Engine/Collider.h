@@ -28,7 +28,7 @@ protected:
 	ColliderType	type_;			//種類
 	XMFLOAT3		center_;		//中心位置（ゲームオブジェクトの原点から見た位置）
 	XMFLOAT3		size_;			//判定サイズ（幅、高さ、奥行き）
-	int				hDebugModel_;	//デバッグ表示用のモデルのID
+	
 
 public:
 	//コンストラクタ

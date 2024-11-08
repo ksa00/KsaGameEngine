@@ -92,6 +92,28 @@ void GameObject::KillMe()
 	state_.dead = 1;
 }
 
+void GameObject::KillAllChildren()
+{
+	//子供がいないなら終わり
+	if (childList_.empty())
+		return;
+
+	//イテレータ
+	auto it = childList_.begin();	//先頭
+	auto end = childList_.end();	//末尾
+
+	//子オブジェクトを1個ずつ削除
+	while (it != end)
+	{
+		KillObjectSub(*it);
+		delete* it;
+		it = childList_.erase(it);
+	}
+
+	//リストをクリア
+	childList_.clear();
+}
+
 void GameObject::SetPosition(XMFLOAT3 position)
 {
 	transform_.position_ = position;
@@ -227,4 +249,22 @@ GameObject* GameObject::GetRootJob()
 		return this;
 	}
 	else return GetParent()->GetRootJob();
+}
+
+void GameObject::KillObjectSub(GameObject* obj)
+{
+	if (!childList_.empty())
+	{
+		auto list = obj->GetChildList();
+		auto it = list->begin();
+		auto end = list->end();
+		while (it != end)
+		{
+			KillObjectSub(*it);
+			delete* it;
+			it = list->erase(it);
+		}
+		list->clear();
+	}
+	obj->Release();
 }

@@ -14,14 +14,15 @@ Childoden::~Childoden()
 
 void Childoden::Initialize()
 {
-hModel_=Model::Load("Asset//oden.fbx");
-	SphereCollider* collider = new SphereCollider(XMFLOAT3(0,0.0, 0), 1.2f);
+hModel_=Model::Load("Asset//pacman.fbx");
+//transform_.scale_= { 0.25,0.25,0.25 };
+	SphereCollider* collider = new SphereCollider(XMFLOAT3(0,0.0, 0), 0.2f);
      	AddCollider(collider);
 }
 
 void Childoden::Update()  
 {
-	transform_.rotate_.y += 1.0f;
+	//transform_.rotate_.y += 1.0f;
 	//transform_.position_.z += 0.05f;
 	transform_.position_.y += 0.05f;
 	
@@ -45,7 +46,7 @@ void Childoden::Release()
 
 void Childoden::OnCollision(GameObject* pTarget)
 {
-	if (pTarget->GetObjectName() == "Enemy") {
+  	if (pTarget->GetObjectName() == "Enemy") {
 		pTarget->KillMe();
 	}
 	this->KillMe();

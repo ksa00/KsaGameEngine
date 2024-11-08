@@ -9,12 +9,12 @@ Enemy::Enemy(GameObject* parent)
 
 void Enemy::Initialize()
 {
-	hModel = Model::Load("Asset/enemy.fbx");
+	hModel = Model::Load("Asset/pacman.fbx");
 
 	//transform_.position_.y = 2.0f;
-transform_.scale_ = { 0.1f,0.1f,0.1f };
-	SphereCollider* col = new SphereCollider(XMFLOAT3(0, 0, 0), 0.5f);
-	AddCollider(col);
+//transform_.scale_ = { 0.1f,0.1f,0.1f };
+	SphereCollider* col = new SphereCollider(XMFLOAT3(0, 0, 0), 0.1f);
+	AddCollider( col);
 	
 }
 
@@ -23,7 +23,7 @@ void Enemy::Update()
 	static int dt;
 	dt++;
 	float nTime = dt / (10.0f * 10.0f) - 2.0f;
-	transform_.position_.x = 4.0 * sin(nTime);
+	//transform_.position_.x = 4.0 * sin(nTime);
 
 }
 

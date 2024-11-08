@@ -23,10 +23,12 @@ private:
 		unsigned dead : 1;			//削除するか
 	};
 	OBJECT_STATE state_;
-protected:
-	list<GameObject*>	childList_;
-	Transform			transform_;
 	GameObject* pParent_;
+	list<GameObject*>	childList_;
+protected:
+	
+	Transform			transform_;
+	
 	string				objectName_; //オブジェクトの名前の文字列
 	//衝突判定リスト
 	std::list<Collider*>	colliderList_;
@@ -46,8 +48,12 @@ public:
 	void UpdateSub();
 	void ReleaseSub();
 	void KillMe();
+	//子オブジェクトを全て削除
+	void KillAllChildren();
 	void SetPosition(XMFLOAT3 position);
 	void SetPosition(float x, float y, float z);
+	XMFLOAT3 GetWorldPosition() { return Transform::Float3Add(GetParent()->transform_.position_, transform_.position_); }
+
 	//親オブジェクトを取得
 //戻値：親オブジェクトのアドレス
 	GameObject* GetParent();
@@ -61,7 +67,6 @@ public:
 	//子オブジェクトを追加（リストの先頭へ）
 	//引数：obj 追加するオブジェクト
 	void PushFrontChild(GameObject* obj);
-	XMFLOAT3 GetWorldPosition() { return Transform::Float3Add(GetParent()->transform_.position_, transform_.position_); }
 	GameObject* FindChildObject(const string& name);
 
 
@@ -86,19 +91,24 @@ public:
 	virtual void OnCollision(GameObject* pTarget) {};
 
 
+private:
+
+	//オブジェクト削除（再帰）
+	//引数：obj　削除するオブジェクト
+	void KillObjectSub(GameObject* obj);
 
 
-
-	//テンプレートの定義
-	template <class T>
-	T* Instantiate(GameObject* pParent)
-	{
-		T* pNewObject = new T(pParent);
-		if (pParent != nullptr)
-		{
-			pParent->PushBackChild(pNewObject);
-		}
-		pNewObject->Initialize();
-		return pNewObject;
-	}
 };
+
+//テンプレートの定義
+template <class T>
+T* Instantiate(GameObject* pParent)
+{
+	T* pNewObject = new T(pParent);
+	if (pParent != nullptr)
+	{
+		pParent->PushBackChild(pNewObject);
+	}
+	pNewObject->Initialize();
+	return pNewObject;
+}

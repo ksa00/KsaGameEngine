@@ -31,12 +31,13 @@ bool Collider::IsHitCircleVsCircle(SphereCollider* circleA, SphereCollider* circ
 	XMVECTOR v = (XMLoadFloat3(&centerA) + XMLoadFloat3(&positionA))
 		- (XMLoadFloat3(&centerB) + XMLoadFloat3(&positionB));
 
-	if (XMVector3Length(v).m128_f32[0] <= circleA->size_.x + circleB->size_.x)
-	{
-		return true;
-	}
 
-	return false;
+	// Calculate the squared distance between the centers
+	float distanceSquared = XMVector3LengthSq(v).m128_f32[0];
+
+	// Compare squared distance to the sum of the radii squared
+	float radiusSum = circleA->size_.x + circleB->size_.x;
+	return distanceSquared <= (radiusSum * radiusSum);
 }
 
 //テスト表示用の枠を描画
