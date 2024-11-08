@@ -54,6 +54,8 @@ public:
 	void SetPosition(float x, float y, float z);
 	XMFLOAT3 GetWorldPosition() { return Transform::Float3Add(GetParent()->transform_.position_, transform_.position_); }
 
+	//各アクセス関数
+	XMFLOAT3 GetPosition() { return transform_.position_; }
 	//親オブジェクトを取得
 //戻値：親オブジェクトのアドレス
 	GameObject* GetParent();

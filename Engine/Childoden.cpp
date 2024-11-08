@@ -22,7 +22,7 @@ hModel_=Model::Load("Asset//pacman.fbx");
 
 void Childoden::Update()  
 {
-	//transform_.rotate_.y += 1.0f;
+	transform_.rotate_.y += 3.0f;
 	//transform_.position_.z += 0.05f;
 	transform_.position_.y += 0.05f;
 	
