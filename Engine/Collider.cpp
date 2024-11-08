@@ -22,7 +22,7 @@ Collider::~Collider()
 //ˆø”FcircleB	‚Q‚Â–Ú‚Ì‹…‘Ì”»’è
 //–ß’lFÚG‚µ‚Ä‚¢‚ê‚Îtrue
 bool Collider::IsHitCircleVsCircle(SphereCollider* circleA, SphereCollider* circleB)
-{
+{//‚±‚±‚ğgetworldposition()‚ğgetposition()‚É•Ï‚¦‚½‚ç“®‚«‚Ü‚µ‚½——R‚í‚©‚ç‚È‚©‚Á‚½‚ñ‚Å‚·
 	XMFLOAT3 centerA = circleA->center_;
 	XMFLOAT3 positionA = circleA->pGameObject_->GetPosition();
 	XMFLOAT3 centerB = circleB->center_;
